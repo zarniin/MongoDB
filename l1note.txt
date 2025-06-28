@@ -1,0 +1,27 @@
+=> SQL Database (Structure Query Language Database) ?
+    structure format 
+        tables (column , rows) 
+        SELECT , INSERT , UPDATE , DELETE 
+        for = Bank System , ERP , CRM 
+        
+        SQL Database 
+            Mysql 
+            PostgreSQL 
+            Microsoft SQL Server 
+            Oracle Database
+
+=> NoSQL Database ? 
+    unstructured 
+    key-value , document , graph ... format 
+    Real-time apps, Streaming apps 
+
+    NOSQL Database
+        Mongodb 
+        Redis 
+        Nod4j
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+     

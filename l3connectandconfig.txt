@@ -1,0 +1,38 @@
+=> How to connect in Vs Code 
+
+= check status 
+    sudo systemctl status mongod
+    sudo systemctl restart mongod
+
+    (i).open vs code terminal 
+    (ii). enter mongosh 
+    (iii).copy Connecting to:  mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.2
+    (iv). click mongodb extension icon > nAdd Conectio > Connect with Connection String > Connect > paste > enter
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+=> How to connect in Datagrip 
+
+    (i).open vs code terminal 
+    (ii). enter mongosh 
+    (iii).copy Connecting to:  mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.2
+    (iv). file menu > New > Data Source > Mongodb > MongoDB > MongoDB 
+    (v). Config 
+        Name : @127.0.0.1 
+        Host : 127.0.0.1  Port : 27017
+        Authentication : No auth 
+        URL : mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.2
+        Apply > OK
+
+        Note :: we need to update Datagrid Driver
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+=> How to connect in MongoDB Compass 
+
+    (i).open vs code terminal 
+    (ii). enter mongosh 
+    (iii).copy Connecting to:  mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.2
+    (iv). Open MongoDB Compass > click "Add new connection" > URL (paste connection string) > Save & Connect
+
+-----------------------------------------------------------------------------------------------------------------------------------------------

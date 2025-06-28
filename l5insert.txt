@@ -1,0 +1,22 @@
+=> Insert Data 
+
+Ways => Use database => collection => douments (insert Data) 
+
+mongosh 
+use lessonone 
+db.createCollection("users")
+show dbs 
+show collections 
+
+=> Create Document (single)
+db.users.insertOne({name:"su su",age:20,hasnrc:false})
+
+=> Create Document (multi) 
+db.users.insertMany([{name:"tun tun",age:19,hasnrc:false},{name:"zaw zaw",age:21,hasnrc:false},{name:"kyaw kyaw",age:22,hasnrc:true}])
+
+=> List Documents 
+db.users.find()
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+28MT 

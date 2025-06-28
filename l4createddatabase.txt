@@ -1,0 +1,35 @@
+=> Open Terminal
+go to Terminal , CMD , PowerShell
+mongosh
+
+=> Show Databases
+show dbs 
+cls 
+exit() 
+
+=> Choose Database or Switch Database 
+use <database_name>
+
+eg: use admin 
+    use config 
+    use local 
+    cls
+
+=> Create Database
+use <database_name>
+
+eg: use lessonone 
+    show dbs (but, you may not see lessonone on dbs , because there is no collection yet) 
+
+=> Create Collection 
+    db.createCollection("users")
+    show.dbs
+
+=> Show Collection 
+    show collection 
+
+=> Drop Database 
+    db.dropDatabase() 
+    show dbs
+
+-------------------------------------------------------------------------------------------------------

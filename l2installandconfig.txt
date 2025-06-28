@@ -1,0 +1,204 @@
+=> Mongodb is noSql Database
+
+    official website 
+    https://www.mongodb.com/
+
+=> Download App (driver,compass) 
+
+    => Windows 
+
+        Method 1
+
+            Resources > Server Documentation > Introduction > Get Started > (rightpannel and scroll down) > Installation Guides > 
+            MongoDB Installation Tutorials > Windows > Install MongoDB Community Edition > Mongodb Download Center > 
+            version : 8.0.10 (current) 7 June 2025 
+            Platform : Windows X64 
+            Package: msi 
+
+            click "download"
+
+        Method 2 
+
+            Product menu > Try Community Edition > Download 
+            version : 8.0.10 (current) 7 June 2025 
+            Platform : Windows X64 
+            Package: msi 
+
+            click "download"
+
+            => Download MongoDB Shell 
+
+                Product menu > Try Community Edition > Tools > MongoDB Shell > Download 
+                version : 2.5.2 (current) 7 June 2025 
+                Platform : Windows X64 (10+)
+                Package: zip 
+
+                click "download"
+
+    => Linux (Ubuntu) 
+
+        Product menu > Try Community Edition > Download 
+        version : 8.0.10 (current) 7 June 2025 
+        Platform : Ubuntu 24.04 x64 || Ubuntu 24.04 ARM x64
+        Package: server
+
+        click "download"
+
+        Ubuntu 24.04 Ubuntu for x64 (Intel/ARM 64 CPUS) 
+        Ubuntu 24.04 APM Ubuntu for arm x64 (Raspberry PI, Apple M1/M2) 
+
+        = ARM (CPU)
+        Advance RISC (Reduce Instruction Set Computer) Machine 
+        = Benfits 
+        Enery-efficient 
+        Lower hand output 
+        Good performance per watt 
+
+        => Download MongoDB Shell 
+
+                Product menu > Try Community Edition > Tools > MongoDB Shell > Download 
+                version : 2.5.2 (current) 7 June 2025 
+                Platform Debian(10+) Ubuntu (18.04+)x64
+                Package: deb 
+
+                click "download"
+        
+        => Download MongoDB Compass (GUI)  
+
+                Product menu > Try Community Edition > Tools > MongoDB Compass (GUI) > Download 
+                version : 1.46.3 7 June 2025 
+                Platform : Ubuntu 64-bit (16.04+)
+                Package: deb 
+
+                click "download"
+
+    => MacOS 
+
+        Product menu > Try Community Edition > Download 
+        version : 8.0.10 (current) 7 June 2025 
+        Platform : macOS x64 || macOS ARM 64 
+        Package: tgz
+
+        click "download"
+
+        macOS x64 macOS for x64 Intel-based Macs
+        Ubuntu 24.04 APM Ubuntu for Apple Silicon chips (M1,M2,M3,M4) 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+=> Install App 
+
+    => Windows 
+
+        => Install MongoDB 
+
+        => Path MongoDB Shell 
+            unzip 
+            move "Download Folder to "C > Program File > MongoDB "
+            open unziped folder > bin 
+            right click and go properties on mongosh.exe and copy Location:address 
+
+            go to windows search "enviroment" and click "Edit the system enviroment variables"
+            "System properties > "Advanced" > "Enviroment Variables" > under "System variables" title > choose "MongoSH" and delete > "Click" new 
+            "System properties > "Advanced" > "Enviroment Variables" > under "System variables" title > find and select the "Path" and click edit > "Click" new
+            Variables name : mongosh 
+            Variables value : paste Location > click "ok"
+
+            to open "Shell" go to "C > Program File > MongoDB > unziped folder > bin > double click "mongosh.exe"
+
+    => Linux (Ubuntu) 
+
+        => Install MongoDB 
+
+            ctl+alt+t 
+            sudo apt update 
+            sudo apt upgrade -y
+
+            cd ~/Downloads 
+            sudo dpkg -i mongodb-org-server_8.0.10_amd64.deb 
+            sudo apt -f install ( Fix Missing Dependencies (optional))
+
+            => check status 
+                sudo systemctl status mongod
+                sudo systemctl restart mongod 
+
+            => If server is not working (optional) 
+
+                => Create Log and Data folders 
+                    sudo mkdir -p /var/log/mongodb  
+                    sudo mkdir -p /var/log/mongodb
+
+                => Set Correct Ownership ( drwxr-xr-x to)
+                    sudo chown -R mongodb:mongodb /var/log/mongodb 
+                    sudo chown -R mongodb:mongodb /var/log/mongodb 
+
+                => Ensure your config file paths to these paths 
+                    sudo nano /etc/mongod.conf 
+                
+                    storage: 
+                        dbPath: /var/lib/mongodb 
+
+                        systemLog:
+                            destination: file 
+                            logAppend: true 
+                            path: /var/log/mongodb/mongod.log 
+
+                        net:
+                            port: 27017
+                            blindIp: 127.0.0.1 
+
+                        processManagement:
+                        timeZoneInfo: /user/share/zoneinfo
+                
+                 => check status
+                    sudo systemctl restart mongod 
+                    sudo systemctl status mongod
+
+                    sudo systemctl stop mongod
+                    
+                
+                => Install MongoDB Shell 
+
+                    ctl+alt+t 
+
+                    cd ~/Downloads 
+                    sudo dpkg -i mongodb-mongosh-_2.5.2_amd64.deb 
+                    sudo apt -f install ( Fix Missing Dependencies (optional))
+                
+                => Install MongoDB Compass (GUI) 
+
+                    ctl+alt+t 
+
+                    cd ~/Downloads 
+                    sudo dpkg -i mongodb-compass-1.46.3_amd64.deb 
+                    sudo apt -f install ( Fix Missing Dependencies (optional))
+
+    => macOS
+        => Install MongoDB 
+
+            ctl+alt+t 
+            sudo apt update 
+            sudo apt upgrade -y
+
+            cd ~/Downloads 
+            sudo dpkg -i mongodb-org-server_8.0.10_amd64.deb 
+            sudo apt -f install ( Fix Missing Dependencies (optional))
+
+            => check status 
+                sudo systemctl status mongod
+                sudo systemctl restart mongod
+        
+        
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+=> Install extension on VScode 
+
+    File menu > Preferences > Extensions 
+    search as mongodb > "MongoDB for VS Code" install 
+    Advanced Connection Settings > "Open form" > Save & Connect 
+
+    => Open shell in vs terminal 
+    right click "localhost:27017" > Launch MongoDB Shell 
+    show dbs;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
