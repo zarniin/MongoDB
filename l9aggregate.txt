@@ -1,0 +1,537 @@
+=>Aggregate Stages 
+syntax 
+
+db.collection.aggregate([
+    {stage 1},
+    {stage 2},
+    ...
+])
+
+=>Aggregate Stages 
+
+$stage
+
+$match
+$project 
+$group
+$sort 
+$limit 
+$skip 
+$count 
+$lookup
+$unwind 
+$addFields
+
+db.createCollection("students")
+show collections
+
+db.students.insertMany([
+    {
+        _id:1,
+        name:"su su",
+        age:20,
+        class:"A",
+        scores:[85,90,78],
+        city:"Yangon"
+    },
+    {
+        _id:2,
+        name:"Yu Yu",
+        age:22,
+        class:"B",
+        scores:[88,76,90],
+        city:"Mandalay"
+    },
+    {
+        _id:3,
+        name:"Nu Nu",
+        age:19,
+        class:"A",
+        scores:[92,19,78],
+        city:"Yangon"
+    },
+    {
+        _id:4,
+        name:"Yi Yi",
+        age:21,
+        class:"C",
+        scores:[70,65,80],
+        city:"Naypyitaw"
+    },
+    {
+        _id:5,
+        name:"Nyi Nyi",
+        age:18,
+        class:"B",
+        scores:[95,98,100],
+        city:"Mandalay"
+    },
+    {
+        _id:6,
+        name:"Yee Yee",
+        age:23,
+        class:"C",
+        scores:[60,75,70],
+        city:"Yangon"
+    },
+    {
+        _id:7,
+        name:"Hnin Hnin",
+        age:17,
+        class:"A",
+        scores:[55,65,60],
+        city:"Bago"
+    },
+    {
+        _id:8,
+        name:"Ag Ag",
+        age:20,
+        class:"B",
+        scores:[85,90,78],
+        city:"Yangon"
+    },
+    {
+        _id:9,
+        name:"Hla Hla",
+        age:22,
+        class:"B",
+        scores:[85,90,78],
+        city:"Mandalay"
+    },
+    {
+        _id:10,
+        name:"Nadi",
+        age:23,
+        class:"A",
+        scores:[85,90,78],
+        city:"Bago"
+    }
+])
+
+db.students.find()
+
+=> $match (like 'find')
+db.students.aggregate([
+    {
+        $match : {
+            class:"A"
+        }
+    }
+])
+
+
+------------------------------------
+
+=> $project
+db.students.aggregate([
+    {$project:{
+        name:true,
+        age:true,
+        _id:false
+    }}
+])
+
+db.students.aggregate([
+    {$project:{
+        name:1,
+        age:1,
+        _id:0
+    }}
+])
+
+
+db.students.aggregate([
+    {$project:{
+        _id:0,
+        name:1,
+        age:1,
+        over18:{
+            $gte:["$age",18]
+        }
+    }}
+])
+
+------------------------------------
+
+=> $group 
+
+db.students.aggregate([
+    {
+        $group:{
+            _id:"$class"
+        }
+    }
+])
+
+db.students.aggregate([
+    {
+        $group:{
+            _id:"$class",
+            total:{$sum:1}
+        }
+    }
+])
+
+------------------------------------
+
+=> $sort 
+
+db.students.aggregate([
+    {
+        $sort:{age:1}
+    }
+])
+
+db.students.aggregate([
+    {
+        $sort:{age:-1}
+    }
+])
+
+------------------------------------
+
+=> $limit
+
+db.students.aggregate([
+    {
+        $sort:{age:1}
+    },
+    {
+        $limit:3
+    }
+])
+
+------------------------------------
+
+=> $skip
+
+db.students.aggregate([
+    {
+        $sort:{age:1}
+    },
+    {
+        $skip:2
+    }
+])
+
+------------------------------------
+
+=> $count 
+
+db.students.aggregate([
+    {
+        $count:"totalstudents"
+    }
+])
+
+------------------------------------
+
+=> $lookup 
+
+syntax 
+
+{
+    $lookup{
+        from:"collection to join",
+        localField:"field from input documents",
+        foreignField:"field form input documents of from collection",
+        as:"output field"
+    }
+}
+
+db.createCollection("customers")
+db.createCollection("orders")
+
+db.customers.insertMany([
+    {_id:1001,name:"Nan Nan",email:"nannan@gmail.com"},
+    {_id:1002,name:"Chaw Chaw",email:"chawchaw@gmail.com"},
+    {_id:1003,name:"Bo Bo",email:"bobo@gmail.com"},
+    {_id:1004,name:"Kyaw Kyaw",email:"kyawkyaw@gmail.com"},
+    {_id:1005,name:"Naw Naw",email:"nawnaaw@gmail.com"}
+])
+
+db.orders.insertMany([
+    {_id:1,product:"Laptop",customerId:1001,qty:1},
+    {_id:2,product:"Mouse",customerId:1002,qty:2},
+    {_id:3,product:"Keyboard",customerId:1005,qty:1},
+    {_id:4,product:"Monitor",customerId:1001,qty:3},
+    {_id:5,product:"Router",customerId:1001,qty:1}
+])
+
+exe 1 
+
+db.orders.aggregate([
+    {
+        $lookup:{
+            from:"customers",
+            localField:"customerId",
+            foreignField:"_id",
+            as:"cus"
+        }
+    }
+])
+
+exe 2 ( Join with array fieldes )
+
+db.createCollection("pupils");
+db.createCollection("courses");
+
+db.pupils.insertMany([
+    {_id:1001,name:"Nan Nan",email:"nannan@gmail.com",enrolledCourses:[101,103]},
+    {_id:1002,name:"Chaw Chaw",email:"chawchaw@gmail.com"},
+    {_id:1003,name:"Bo Bo",email:"bobo@gmail.com",enrolledCourses:[102,103]},
+    {_id:1004,name:"Kyaw Kyaw",email:"kyawkyaw@gmail.com"},
+    {_id:1005,name:"Naw Naw",email:"nawnaaw@gmail.com",enrolledCourses:[101]}
+])
+
+db.courses.insertMany([
+    {_id:101,title:"PHP",type:"Video Class"},
+    {_id:102,title:"Laravel",type:"Zoom Class"},
+    {_id:103,title:"Reactjs",type:"Video Class"},
+])
+
+db.pupils.aggregate([
+    {
+        $lookup:{
+            from:"courses",
+            localField:"enrolledCourses",
+            foreignField:"_id",
+            as:"enrolled"
+        }
+    }
+])
+
+------------------------------------
+
+=> $unwind 
+
+syntax 
+
+{
+    $unwind:{
+        path:"array field",
+        preserveNullAndEmptyArrays:"boolean",
+        includeArrayIndex:"string"
+    }
+}
+
+exe 1 
+
+db.createCollection("disciples");
+
+db.disciples.insertMany([
+    {_id:1001,name:"Nan Nan",courses:["Math","Physics","Chemistry"],scores:[80,90,100]},
+    {_id:1002,name:"Chaw Chaw",courses:["English","History"],scores:[50,60]},
+    {_id:1003,name:"Bo Bo",courses:[],scores:[]}
+])
+
+db.disciples.find() 
+
+exe 1 
+
+db.disciples.aggregate([
+    {
+        $unwind:"$courses"
+    }
+])
+
+exe 2 
+
+db.disciples.aggregate([
+    {
+        $unwind:{
+            path:"$courses",
+            preserveNullAndEmptyArrays:true
+        }
+    }
+])
+
+exe 3 
+
+db.disciples.aggregate([
+    {
+        $unwind:{
+            path:"$courses",
+            includeArrayIndex:"courseIdx"
+        }
+    }
+])
+
+db.disciples.aggregate([
+    {
+        $unwind:{
+            path:"$scores",
+            includeArrayIndex:"scoreIdx"
+        }
+    }
+])
+
+db.disciples.aggregate([
+    {$unwind:{path:"$courses",includeArrayIndex:"courseIdx"}},
+    {$unwind:{path:"$scores",includeArrayIndex:"scoreIdx"}},
+    {$match:{$expr:{$eq:["$courseIdx","$scoreIdx"]}}}
+])
+
+------------------------------------
+
+=> $addFields
+
+syntax 
+
+{
+    $addFields:{
+        newField:<expression>,
+        extingField:<expression> // overwrites 
+    }
+}
+
+db.createCollection("inventories")
+
+db.inventories.insertMany([
+    {_id:1,name:"Laptop",price:600,qty:10,tax:60},
+    {_id:2,name:"Mouse",price:20,qty:30,tax:2},
+    {_id:3,name:"Keyboard",price:30,qty:50,tax:3},
+    {_id:4,name:"UPS",price:100,qty:70,tax:10},
+    {_id:5,name:"Power Bank",price:40,qty:100,tax:4}
+])
+
+db.inventories.find()
+
+exe 1 
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            grantTotal:{$add:["$price","$tax"]}
+        }
+    }
+])
+
+exe 2
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            afterDiscount:{$subtract:["$price",10]}
+        }
+    }
+])
+
+exe 3
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            grantTotal:{$add:["$price","$tax"]}
+        }
+    },
+    {
+        $addFields:{
+            almostOut:{$lte:["$qty",30]}
+        }
+    }
+])
+
+exe 4 
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            priceWithTax:{$add:["$price","$tax"]},
+            totalValue:{$multiply:[{$add:["$price","$tax"]},"$qty"]},
+            inStock:{$gt:["$qty",0]}
+        }
+    }
+])
+
+exe 5
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            nameUpper:{$toUpper:"$name"},
+            nameLower:{$toLower:"$name"},
+            firstPay:{$divide:[{$add:["$price","$tax"]},2]}
+        }
+    }
+])
+
+exe 6 ( nested fields with if condition )
+
+syntax if 
+
+{
+    cond:{
+        if:<condition>,
+        then:<value of true>,
+        else:<value of else>
+    }
+}
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            "stock.level":{
+                $cond:{
+                    if:{$gte:["$qty",100]},
+                    then:"A",
+                    else:{
+                        $cond:{
+                            if:{$gte:["$qty",50]},
+                            then:"B",
+                            else:{
+                                $cond:{
+                                    if:{$gte:["$qty",20]},
+                                    then:"C",
+                                    else:"D"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+])
+
+exe 6 ( nested fields with switch condition )
+
+syntax if 
+
+{
+    $switch:{
+        branches:[
+            {case:<expression>,then:<result>},
+            {case:<expression>,then:<result>},
+            {case:<expression>,then:<result>},
+        ],
+        default:<default result>
+    }
+}
+
+db.inventories.aggregate([
+    {
+        $addFields:{
+            "stock.level":{
+                $switch:{
+                    branches:[
+                        {case:{$gte:["$qty",100]},then:"A"},
+                        {case:{$gte:["$qty",50]},then:"B"},
+                        {case:{$gte:["$qty",20]},then:"C"}
+                    ],
+                    default:"D"
+                }
+            }
+        }
+    }
+])
+
+
+
+
+
+
+
+
+
+

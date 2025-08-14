@@ -1,0 +1,220 @@
+=> Comparsion Operators ( 9 types )
+
+Operator                Meaning 
+$eq                     Equal to
+$ne                     Not equal 
+$gt                     Greater than
+$gte                    Greater than or equal to 
+$lt                     Less than 
+$lte                    Less than or equal to
+$in                     Any value in an array 
+$nin                    does not match any value 
+$expr                   Expression (Compare two fields)
+
+$and 
+
+$add , $subtract , $multiply , $divide
+
+$cond 
+
+----------------------------------------------------------------------------------------------------
+
+mongosh 
+use lessonone 
+db.createCollection("employees")
+show collections 
+
+db.employees.insertMany([
+        {name:"ni ni",age:20,city:"yangon",gender:"female",salary:300000,bonus:30000},
+        {name:"yee yee",age:20,city:"yangon",gender:"female",salary:300000,bonus:30000},
+        {name:"si si",age:30,city:"yangon",gender:"female",salary:400000,bonus:40000},
+        {name:"nyi nyi",age:15,city:"mandalay",gender:"male",salary:200000,bonus:20000},
+        {name:"min min",age:20,city:"mandalay",gender:"male",salary:300000,bonus:30000},
+        {name:"hnin hnin",age:28,city:"mandalay",gender:"female",salary:350000,bonus:35000},
+        {name:"linn linn",age:23,city:"bago",gender:"male",salary:330000,bonus:33000},
+        {name:"win win",age:40,city:"bago",gender:"female",salary:170000,bonus:17000},
+        {name:"sai sai",age:17,city:"bago",gender:"male",salary:400000,bonus:null},
+        {name:"ni ni",age:45,city:"bago",gender:"female",salary:100000,bonus:20000},
+        {name:"ko ko",age:15,city:"bago",gender:"male",salary:100000.456,bonus:null},
+        {name:"zin zin",age:18,city:"mandalay",gender:"female",salary:200000.123,bonus:20000},
+        {name:"lwin lwin",age:20,city:"bago",gender:"female",salary:450000,bonus:null}
+])
+
+
+db.employees.find()
+
+Syntax 
+db.collection.find({filed:{$operator:value}})
+
+=> 1. $eq                          Equal to 
+db.employees.find({city:{$eq:"yangon"}})
+db.employees.find({age:{$eq:20}})
+
+=> 2. $ne                          Not equal to 
+db.employees.find({city:{$ne:"bago"}})
+db.employees.find({gender:{$ne:"male"}})
+
+=> 3. $gt                     Greater than 
+db.employees.find({age:{$gt:20}})
+db.employees.find({age:{$gt:30}})
+
+=> 4. $gte                    Greater than or equal to 
+db.employees.find({age:{$gte:20}})
+db.employees.find({age:{$gte:30}})
+
+=> 5. $lt                     Less than 
+db.employees.find({age:{$lt:20}})
+db.employees.find({age:{$lt:30}})
+
+=> 6. $lte                    Less than or equal to
+db.employees.find({age:{$lte:20}})
+db.employees.find({age:{$lte:30}})
+
+=> 7. $in                     Any value in an array 
+db.employees.find({city:{$in:"yangon","bago"}})
+db.employees.find({name:{$in:["zin zin","lwin lwin"]}})
+
+=> 8. $nin                    does not match any value 
+db.employees.find({city:{$nin:["zin zin","ko ko","lwin lwin"]}})
+db.employees.find({name:{$in:[17,15]}})
+
+=> 9. $expr                   Expression (Compare two fields)
+
+syntax 
+
+db.employees.find({
+        $expr:{
+            $operator:["$field1","$field2"]
+        }
+})
+
+db.employees.find({
+     $expr:{
+        $gt:["$salary","$bonus"]
+     }
+})
+
+db.employees.find({
+        $expr:{
+            $gt:["$bonus","$salary"]
+        }
+})
+
+db.employees.find({
+        $expr:{
+            $lt:["$bonus","$salary"]
+        }
+})
+
+db.employees.find({
+        $expr:{
+            $gt:["$salary","300000"]
+        }
+})
+
+db.employees.find({
+        $expr:{
+            $lt:["$bonus","40000"]
+        }
+})
+
+=> $and 
+
+db.employees.find({
+        $expr:{
+            $and:[
+                {$gt:["$salary","300000"]},
+                {$lt:["$bonus","40000"]}
+            ]
+        }
+})
+
+db.employees.find({
+    age:{
+        $gt:20,$lt:40
+    }
+})
+
+db.employees.find({
+    city:"mandalay",
+    age:{
+        $gt:20,$lt:40
+    }
+})
+
+db.employees.find({
+    name:"hnin hnin",
+    age:{
+        $gt:20,$lt:40
+    }
+})
+
+$add , $subtract , $multiply , $divide with $expr
+
+// Find where salary+bonus > 400000
+db.employees.find({
+   $expr:{
+        $gt:[{$add:["$salary","$bonus"]},"400000"]
+   }
+})
+
+// Find where salary-bonus > 100000
+db.employees.find({
+   $expr:{
+      $lt:[{$subtract:["$salary","$bonus"]},"100000"]
+   }
+})
+
+// Find where salary < bonus x 2
+db.employees.find({
+   $expr:{
+      $lt:["$salary",{$multiple:["$bonus",2]}]
+   }
+})
+
+// Find where salary / 2 < bonus 200000
+db.employees.find({
+   $expr:{
+      $lt:[{$divide:["$salary",2]},200000]
+   }
+})
+
+=> $cond (conditional) 
+
+db.employees.find({
+   $expr:{
+      $cond:{
+         {if:expression},
+         then:true,
+         else:false
+      }
+   }
+})
+
+db.employees.find({
+   $expr:{
+     $cond:{
+        if:{$lt:["$salary","$bonus"]},
+        then:true,
+        else:false
+     }
+   }
+})
+
+db.employees.find({
+   $expr:{
+     $cond:{
+        if:{$gte:["$age",40]},
+        then:true,
+        else:false
+     }
+   }
+})
+
+
+
+
+
+
+
+

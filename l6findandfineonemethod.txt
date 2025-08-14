@@ -1,0 +1,97 @@
+##### Read #####
+
+=> find() and findOne() Methods 
+
+db.collection.find(query);
+db.collection.find(query,projection);
+
+db.collection.findOne(query);
+db.collection.findOne(query,projection);
+
+mongosh
+use lessonone 
+show collections
+db.users.find()
+
+==== QUERY ====
+
+db.users.find({name:"zin zin"})
+
+db.users.find({name:Zin Zin})// this will not work
+db.users.find({name:zin zin})// this will not work
+
+db.users.find({name:"win win"})
+db.users.find({age:23})
+
+db.users.findOne({age:23})
+
+db.users.find({age:19})
+db.users.find({age:19,hasnrc:false})
+db.users.find({age:19,hasnrc:false,name:"yamin"})
+
+db.users.find({_id:"68720e62f2c243887dce7109"});// this will not work 
+
+db.users.find({_id:ObjectId("68720e62f2c243887dce7109")});// array 
+db.users.findOne({_id:ObjectId("68720e62f2c243887dce7109")});// object
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+==== QUERY , PROJECTION ====
+
+true = 1
+false = 0
+
+db.users.find({},{name:true});
+db.users.find({},{_id:false,name:true});
+db.users.find({},{name:true,age:true});
+db.users.find({},{_id:false,name:true,age:true});
+
+db.users.find({},{name:1});
+db.users.find({},{_id:0,name:1});
+db.users.find({},{name:1,age:1});
+db.users.find({},{_id:0,name:1,age:1});
+
+db.users.find({hasnrc:0})// this will not work
+db.users.find({hasnrc:false})
+db.users.find({hasnrc:false},{_id:0,hasnrc:1,name:1})
+db.users.find({hasnrc:false},{_id:false,hasnrc:true,name:true})
+
+db.users.find({hasnrc:false},{_id:false,hasnrc:true,name:false})// MongoServerError[Location31254]: Cannot do exclusion on field name in inclusion projection
+db.users.find({hasnrc:false},{_id:false,hasnrc:true,name:0})
+db.users.find({hasnrc:false},{_id:false,hasnrc:false,name:true})
+
+db.users.find({hasnrc:false},{_id:false,hasnrc:true})
+db.users.find({hasnrc:false},{_id:false,name:true})
+
+db.users.find({age:23})
+db.users.findOne({age:23})
+db.users.findOne({age:23},{_id:"0",name:1,hasnrc:1})
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+=> In Compass 
+
+{name:"zin zin"}
+{name:"win win"}
+
+== for projection 
+click "option"
+
+Project : type bellow codes as one by one 
+{name:true}
+{_id:false,name:true}
+{_id:0,name:1}
+{name:true,age:true}
+{_id:false,age:true,name:true}
+
+Sort : 
+{name:1}
+{name:-1}
+{age:1}
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+

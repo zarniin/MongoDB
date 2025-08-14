@@ -1,0 +1,350 @@
+=>Looping 
+
+db.developers.insertMany([
+    {_id:1,name:"Bo Bo",hobbies:["reading","swimming","travelling"],languages:["WDF","PHP","Laravel"]},
+    {_id:2,name:"Tun Tun",hobbies:["gaming","writing","travelling"],languages:["WDF","jQuery","Reactjs"]},
+    {_id:3,name:"Su Su",hobbies:["reading","swimming","cooking"],languages:["WDF","Python","Django"]},
+    {_id:4,name:"Ni Ni",hobbies:["reading","cooking","travelling"],languages:["WDF","PHP","Laravel"]},
+    {_id:5,name:"Bo Bo",hobbies:["reading","yoga","travelling"],languages:["WDF","PHP","Laravel"]}
+])
+
+$map 
+$all 
+$filter
+$reduce
+
+
+=> $map 
+
+syntax 
+
+{
+    $map:{
+        input:<array expression>,
+        as:<variable name>,
+        in:<expression to apply>
+    }
+}
+
+db.developers.aggregate([
+    {
+        $project:{
+            name:1,
+            lowercaseLanguages:{
+                $map:{
+                    input:"$language",
+                    as:"lang",
+                    in:{
+                        $toLower:"$$lang"
+                    }
+                }
+            }
+        }
+    }
+])
+
+db.developers.aggregate([
+    {
+        $addFields:{
+            upperHobbies:{
+                $map:{
+                    input:"$hobbies",
+                    as:"hob",
+                    in:{$toUpper:"$$hob"}
+                }
+            }
+        }
+    }
+])
+
+----------------------------------------
+
+==> $all Operator 
+
+syntax 
+
+{
+    <field>:{
+        $all: [value1,value2,...]
+    }
+}
+
+
+db.developers.find()
+
+exe 1
+
+db.developers.find({
+    languages:{
+        $all:["WDF","Laravel"]
+    }
+});
+
+exe 2 
+
+db.developers.find({
+    languages:{
+        $all:["Laravel","WDF"]
+    }
+});
+
+---------------------------------------------------
+
+=> $filter  
+
+syntax 
+
+{
+    $filter:{
+        input: <array expression>,
+        as: <variable name> optional,
+        cond: <boolean expression>
+    }
+}
+
+exe 1
+
+db.developers.find({
+    languages:{
+        $all:["Laravel","WDF"]
+    }
+});
+
+exe 2 
+
+db.developers.aggregate([
+    {
+        $match:{
+            languages:{
+                $all:["Laravel","WDF"]
+            }
+        }
+    }
+])
+
+exe 1 
+
+db.developers.aggregate([
+    {
+        $addFields:{
+            phpDeveloper:{
+                $filter:{
+                    input:"$languages",
+                    as:"lang",
+                    cond:{
+                        $eq:["$$lang","PHP"]
+                    }
+                }
+            }
+        }
+    }
+])
+
+exe 2
+
+db.developers.aggregate([
+    {
+        $addFields:{
+            phpDeveloper:{
+                $filter:{
+                    input:"$languages",
+                    as:"lang",
+                    cond:{
+                        $eq:["$$lang","PHP"]
+                    }
+                }
+            }
+        }
+    },
+    {
+        $match:{
+            phpDeveloper:{
+                $ne:[]
+            }
+        }
+    }
+])
+
+exe 2
+
+db.developers.aggregate([
+    {
+        addFields:{
+            phpDeveloper:{
+                $filter:{
+                    input:"$languages",
+                    as:"lang",
+                    cond:{
+                        $eq:["$$lang","PHP"]
+                    }
+                }
+            }
+        }
+    },
+    {
+        $match:{
+            phpDeveloper:{
+                $ne:[]
+            }
+        }
+    },
+    {
+        $limit: 2
+    }
+])
+
+db.developers.aggregate([
+    {
+        $addFields:{
+            pythonDeveloper:{
+                $filter:{
+                    input:"$languages",
+                    as:"lang",
+                    cond:{
+                        $eq:["$$lang","Python"]
+                    }
+                }
+            }
+        }
+    },
+    {
+        $match:{
+            pythonDeveloper:{
+                $ne:[]
+            }
+        }
+    },
+    {
+        $limit: 2
+    }
+])
+
+exe 4
+
+db.developers.aggregate([
+    {
+        $project:{
+            name:1,
+            PythonDvpr:{
+                $filter:{
+                    input:"$languages",
+                    as:"lang",
+                    cond:{
+                        $eq:["$$lang","Python"]
+                    }
+                }
+            }
+        }
+    },
+    {
+        $match:{PythonDvpr:{$ne:[]}}
+    }
+])
+
+-----------------------------------------------------
+
+=> $reduce 
+
+syntax 
+
+{
+    $reduce:{
+        input:<array expression>,
+        initialValue:<expression> // starting value1 
+        in:<expression to apply> // Reduction logic using $$value and $$this
+    }
+}
+
+db.purchases.insertMany([
+    
+    {
+        orderId:1001,
+        items:[
+            {product:"Laptop",price:800,qty:1},
+            {product:"Mouse",price:20,qty:2},
+            {product:"Keyboard",price:50,qty:1}
+        ]
+    },
+    {
+        orderId:1002,
+        items:[
+            {product:"Monitor",price:300,qty:2},
+            {product:"Headphone",price:100,qty:1}
+        ]
+    },
+    {
+        orderId:1003,
+        items:[
+            {product:"Speaker",price:100,qty:4},
+            {product:"Webcam",price:50,qty:1}
+        ]
+    }
+
+])
+
+
+exe 1
+
+db.purchases.aggregate([
+
+    {
+        $project:{
+            _id:0,
+            orderId:1,
+            grandTotal:{
+                $reduce:{
+                    input:"$items",
+                    initialValue:0,
+                    in:{
+                        $add:["$$value",{
+                            $multiply:["$$this.price","$$this.qty"]
+                        }]
+                    }
+                }
+            }
+        }
+    }
+
+])
+
+exe 2 
+
+db.purchases.aggregate([
+
+    {
+        $project:{
+            _id:0,
+            orderId:1,
+            totalQuatity:{
+                $reduce:{
+                    input:"$items",
+                    initialValue:0,
+                    in:{
+                       $add:["$$value","$$this.qty"] 
+                    }
+                }
+            }
+        }
+    }
+
+])
+
+db.purchases.aggregate([
+
+    {
+        $project:{
+            _id:0,
+            orderId:1,
+            itemTotals:{
+                $map:{
+                    input:"$items",
+                    as:"item",
+                    in:{$multiply:["$$item.price","$$item.qty"]}
+                }
+            }
+        }
+    }
+
+])
+
+9RD
